@@ -255,6 +255,15 @@ func init() {
 	}
 }
 func main() {
+
+	// 打印各配置
+	fmt.Println("=========配置文件如下=========")
+	fmt.Println("glm-key: " + viper.GetString("glm-key"))
+	fmt.Print("max-dialogue: ")
+	fmt.Println(viper.GetInt("max-dialogue"))
+	fmt.Println("chat-uuid: " + viper.GetString("chat-uuid"))
+	fmt.Println("==============================")
+
 	// 初始化请求参数
 	reqData = NewRequest{
 		Model:    "glm-4",
