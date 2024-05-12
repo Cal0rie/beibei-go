@@ -17,7 +17,7 @@ go build -o dist/beibei-go app/main.go
 ./beibei-go -c ~/coder/go/beibei-go/config.yaml
 ```
 ### 配置项
-1. `api-key`：智谱清言API KEY
+1. `api-key`：必需项，智谱清言API KEY，可通过[智谱AI开放平台](https://open.bigmodel.cn/)获取
 1. `max-dialogue`：最长对话轮数，默认为10
 1. `chat-uuid`：鱼鹰聊天中，机器人登录所使用的uuid
 #### 范例
