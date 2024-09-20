@@ -1,1 +1,5 @@
 glm-key: 
+model-from: xinghuo
+# 模型选择，glm——智谱清言 xinghuo——讯飞星火
+model: general
+api-url: https://spark-api-open.xf-yun.com/v1/chat/completions

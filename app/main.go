@@ -14,25 +14,16 @@ import (
 	"sync"
 	"time"
 
+	"beibei/app/common"
 	"beibei/app/service"
 
 	"github.com/gorilla/websocket"
 	"github.com/spf13/viper"
 )
 
-type websocketClientManager struct {
-	conn        *websocket.Conn
-	addr        *string
-	path        string
-	sendMsgChan chan string
-	recvMsgChan chan string
-	isAlive     bool
-	timeout     int
-}
-
 type NewRequest struct {
-	Model    string               `json:"model"`
-	Messages []service.ReqMessage `json:"messages"`
+	Model    string              `json:"model"`
+	Messages []common.ReqMessage `json:"messages"`
 }
 
 // http响应
@@ -52,6 +43,16 @@ type SocketRequest struct {
 type SocketResponse struct {
 	Msg      string `json:"msg"`
 	UserName string `json:"userName"`
+}
+
+type websocketClientManager struct {
+	conn        *websocket.Conn
+	addr        *string
+	path        string
+	sendMsgChan chan string
+	recvMsgChan chan string
+	isAlive     bool
+	timeout     int
 }
 
 // 全局变量，存储多个对话
@@ -185,7 +186,8 @@ func (wsc *websocketClientManager) Recv() {
 // 发送POST请求
 func (wsc *websocketClientManager) Post(msg string, usr string) {
 	go func() {
-		targetUrl := "https://open.bigmodel.cn/api/paas/v4/chat/completions"
+		// 默认情况下为glm
+		targetUrl := viper.GetString("api-url")
 		fmt.Println(msg)
 		// reqData := NewRequest{
 		// 	Session_id: "friend-123",
@@ -195,7 +197,7 @@ func (wsc *websocketClientManager) Post(msg string, usr string) {
 
 		reqData.Messages = service.ShiftTheMessages(reqData.Messages)
 		// 向请求参数的数组中添加消息
-		reqData.Messages = append(reqData.Messages, service.ReqMessage{
+		reqData.Messages = append(reqData.Messages, common.ReqMessage{
 			Role:    "user",
 			Content: msg,
 		})
@@ -266,8 +268,8 @@ func main() {
 
 	// 初始化请求参数
 	reqData = NewRequest{
-		Model:    "glm-4",
-		Messages: []service.ReqMessage{},
+		Model:    viper.GetString("model"),
+		Messages: []common.ReqMessage{},
 	}
 
 	wsc := NewWsClientManager("8.141.5.195", "9079", "/ws/"+viper.GetString("chat-uuid"), 10)
