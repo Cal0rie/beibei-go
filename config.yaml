@@ -3,3 +3,7 @@ model-from: xinghuo
 # 模型选择，glm——智谱清言 xinghuo——讯飞星火
 model: general
 api-url: https://spark-api-open.xf-yun.com/v1/chat/completions
+
+# 若调用混元大模型，需配置以下参数
+secret-id: 
+secret-key: 

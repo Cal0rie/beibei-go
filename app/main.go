@@ -88,7 +88,7 @@ func (wsc *websocketClientManager) dail() {
 	}
 	wsc.isAlive = true
 	log.Printf("connecting to %s 链接成功！！！", u.String())
-	wsc.sendMsgThread("你的林北北已连接")
+	wsc.sendMsgThread("你的林北北已连接，接入模型" + viper.GetString("model-from"))
 }
 
 // 发送消息到服务端
@@ -176,7 +176,24 @@ func (wsc *websocketClientManager) Recv() {
 						fmt.Println(err)
 					}
 					outputString := strings.ReplaceAll(socketResponse.Msg, "@林北北", "")
-					wsc.Post(outputString, socketResponse.UserName)
+					modelFrom := viper.GetString("model-from")
+					if modelFrom == "hunyuan" {
+						res := service.PostHunyuan(outputString, socketResponse.UserName)
+						// 使用json.Unmarshal将字节数组解析到结构体中
+						fmt.Println(len(res.Choices))
+						// wsc.sendMsgThread(res.Message[0])
+						for i := 0; i < len(res.Choices); i++ {
+							wsc.sendMsgThread(res.Choices[i].Message.Content)
+
+							// 向请求参数的数组中添加消息
+							reqData.Messages = service.ShiftTheMessages(reqData.Messages)
+							reqData.Messages = append(reqData.Messages, res.Choices[i].Message)
+
+							time.Sleep(time.Second * 2)
+						}
+					} else {
+						wsc.Post(outputString, socketResponse.UserName)
+					}
 				}
 			}
 		}

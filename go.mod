@@ -2,7 +2,11 @@ module beibei
 
 go 1.21.4
 
-require github.com/gorilla/websocket v1.5.1
+require (
+	github.com/gorilla/websocket v1.5.1
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/common v1.0.1006
+	github.com/tencentcloud/tencentcloud-sdk-go/tencentcloud/hunyuan v1.0.1006
+)
 
 require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
